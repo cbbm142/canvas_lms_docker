@@ -1,0 +1,21 @@
+---
+version: '3.8'
+services:
+    canvas:
+        image: test
+        environment:
+            POSTGRES_PASSWORD: pass
+            ENCRYPTION_KEY: 1234567890123465790123456789012
+        volumes:
+            - ./config/cache_store.yml:/usr/src/app/config/cache_store.yml
+            - ./config/database.yml:/usr/src/app/config/database.yml
+            - ./config/domain.yml:/usr/src/app/config/domain.yml
+            - ./config/dynamic_settings.yml:/usr/src/app/config/dynamic_settings.yml
+            - ./config/redis.yml:/usr/src/app/config/redis.yml
+            - ./config/security.yml:/usr/src/app/config/security.yml
+    postgres:
+        build: ./postgres
+        environment:
+            POSTGRES_PASSWORD: pass
+    redis:
+        image: redis:alpine
