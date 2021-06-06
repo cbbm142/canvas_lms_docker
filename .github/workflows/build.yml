@@ -16,6 +16,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: lint
         uses: luke142367/Docker-Lint-Action@v1.1.1
         with:
@@ -45,3 +49,11 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Docker Hub Description
+        if: ${{ steps.extract_branch.outputs.branch }} == 'main'
+        uses: peter-evans/dockerhub-description@v2.4.2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          short-description: Canvas LMS for local development of LTI apps
+          repository: cbbm142/canvas
