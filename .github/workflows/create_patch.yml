@@ -1,0 +1,36 @@
+name: Build Canvas Container
+on:
+  schedule:
+    - cron: '30 23 24-31 * 4'
+  workflow_dispatch:
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+        with:
+          repository: https://github.com/instructure/canvas-lms.git
+          ref: stable
+          clean: true
+          fetch-depth: 0
+      - name: Get oldest hash from last month
+        run: |
+            echo "::set-output name=lastHash::$(git log --since="1 month ago" --format=format:%H -- Dockerfile | tail -1 | cut -c 1-40)
+        id: hash
+      - name: generate patches
+        run: git format-patch ${{ steps.hash.outputs.lastHash }} Dockerfile
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3.2.0
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: Diff of upstream Dockerfile
+          to: ${{ secrets.EMAIL_USER }}
+          from: canvas_lms_docker@github.com
+          secure: true
+          body: ${{ steps.hash.outputs.lastHash }}
+          ignore_cert: false
