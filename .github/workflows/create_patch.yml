@@ -1,4 +1,4 @@
-name: Build Canvas Container
+name: Create Patch Email
 on:
   schedule:
     - cron: '30 23 24-31 * 4'
@@ -11,26 +11,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
         with:
-          repository: https://github.com/instructure/canvas-lms.git
+          repository: instructure/canvas-lms
           ref: stable
           clean: true
           fetch-depth: 0
       - name: Get oldest hash from last month
         run: |
-            echo "::set-output name=lastHash::$(git log --since="1 month ago" --format=format:%H -- Dockerfile | tail -1 | cut -c 1-40)
+            echo '::set-output name=lastHash::$(git log --since="1 month ago" --format=format:%H -- Dockerfile | tail -1 | cut -c 1-40)'
         id: hash
-      - name: generate patches
-        run: git format-patch ${{ steps.hash.outputs.lastHash }} Dockerfile
+      - name: Generate patches from that hash
+        run: git format-patch ${{ steps.hash.outputs.lastHash }}~ Dockerfile > patches
+      # There is a PR in the email action to allow globbing that will make this unnecessary once merged
+      - name: Create a one line list of patches to use as attachments
+        run: echo "::set-output name=patches::$(sed -z 's/\n/,/g;s/,$/\n/' patches)"
+        id: patches
       - name: Send email
+        if: steps.patches.outputs.OUTPUT == 0
         uses: dawidd6/action-send-mail@v3.2.0
         with:
           server_address: smtp.gmail.com
           server_port: 465
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: Diff of upstream Dockerfile
+          subject: Diff of upstream Canvas Dockerfile
           to: ${{ secrets.EMAIL_USER }}
           from: canvas_lms_docker@github.com
           secure: true
-          body: ${{ steps.hash.outputs.lastHash }}
+          body: See attachment(s)
           ignore_cert: false
+          attachments: ${{ steps.patches.outputs.patches }}
