@@ -7,7 +7,7 @@ on:
     branches:
       - 'main'
   schedule:
-    - cron: '30 23 24-31 * 4'
+    - cron: '30 23 24-31 * 6'
   workflow_dispatch:
 
 jobs:
@@ -20,12 +20,6 @@ jobs:
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
-      - name: lint
-        uses: luke142367/Docker-Lint-Action@v1.1.1
-        with:
-          target: Dockerfile
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v3
