@@ -7,6 +7,8 @@ on:
     branches:
       - 'main'
   schedule:
+    branches:
+        - 'main'
     - cron: '30 23 24-31 * 6'
   workflow_dispatch:
 
