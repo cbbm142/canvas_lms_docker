@@ -14,7 +14,7 @@ ARG CANVAS_RAILS6_0=1
 ENV CANVAS_RAILS6_0=${CANVAS_RAILS6_0}
 
 ENV YARN_VERSION 1.19.1-1
-ENV BUNDLER_VERSION 2.2.11
+ENV BUNDLER_VERSION 2.2.17
 ENV GEM_HOME /home/docker/.gem/$RUBY
 ENV PATH $GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG /home/docker/.bundle
@@ -43,6 +43,11 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
        fontforge \
        autoconf \
        automake \
+       git \
+       build-essential \
+  && ([ $(lsb_release -rs) = "18.04" ] || apt-get install -qqy --no-install-recommends \
+       python2 \
+       python-is-python2) \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean \
   && mkdir -p /home/docker/.gem/ruby/$RUBY_MAJOR.0
@@ -137,7 +142,7 @@ ARG CANVAS_RAILS6_0=1
 ENV CANVAS_RAILS6_0=${CANVAS_RAILS6_0}
 
 ENV YARN_VERSION 1.19.1-1
-ENV BUNDLER_VERSION 2.2.11
+ENV BUNDLER_VERSION 2.2.17
 ENV GEM_HOME /home/docker/.gem/$RUBY
 ENV PATH $GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG /home/docker/.bundle
@@ -160,6 +165,11 @@ RUN  echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg 
        fontforge \
        autoconf \
        automake \
+       git \
+       build-essential \
+     && ([ $(lsb_release -rs) = "18.04" ] || apt-get install -qqy --no-install-recommends \
+       python2 \
+       python-is-python2) \
      && rm -rf /var/lib/apt/lists/* \
      && apt-get clean \
      && mkdir -p /home/docker/.gem/ruby/$RUBY_MAJOR.0
