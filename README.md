@@ -1,7 +1,14 @@
 # Canvas LMS for LTI testing
 
 
-This container is a prebuilt version of [Canvas LMS](https://github.com/instructure/canvas-lms).  It should only be used for local development and never in production.  The dockerfiles have been taken from the Canvas repo and altered to make a smaller image for easier portability.
+This container is a prebuilt version of [Canvas LMS](https://github.com/instructure/canvas-lms).  It should only be used for local development and never in production.  The dockerfiles have been taken from the Canvas repo and altered to make a smaller image for easier portability.  
+
+----
+
+## Releases
+
+New releases will be created by pushing new tags to this repo.  [A prebuilt canvas container will be available here to download.](https://hub.docker.com/r/cbbm142/canvas)  There is no plan to prebuild and supply a database container at this time.
+
 
 ----
 
