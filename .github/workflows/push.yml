@@ -22,6 +22,8 @@ jobs:
           images: cbbm142/canvas
           tags: |
             type=raw,value={{tag}}
+            type=ref,event=tag
+            type=sha,format=long
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
