@@ -13,6 +13,8 @@ services:
             - ./config/dynamic_settings.yml:/usr/src/app/config/dynamic_settings.yml
             - ./config/redis.yml:/usr/src/app/config/redis.yml
             - ./config/security.yml:/usr/src/app/config/security.yml
+        ports:
+            - 8080:3000
     postgres:
         build: ./postgres
         environment:
