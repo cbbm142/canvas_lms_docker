@@ -1,4 +1,4 @@
-ARG RUBY=2.6-p6.0.4
+ARG RUBY=2.7
 
 FROM instructure/ruby-passenger:$RUBY as builder
 
@@ -45,9 +45,8 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
        automake \
        git \
        build-essential \
-  && ([ $(lsb_release -rs) = "18.04" ] || apt-get install -qqy --no-install-recommends \
        python2 \
-       python-is-python2) \
+       python-is-python2 \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean \
   && mkdir -p /home/docker/.gem/ruby/$RUBY_MAJOR.0
@@ -155,7 +154,7 @@ WORKDIR $APP_HOME
 USER root
 
 RUN  echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-     && curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \ 
+     && curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
      && apt-get update -qq \
      && apt-get install -qqy --no-install-recommends \
        libxmlsec1-dev \
@@ -170,9 +169,8 @@ RUN  echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg 
        automake \
        git \
        build-essential \
-     && ([ $(lsb_release -rs) = "18.04" ] || apt-get install -qqy --no-install-recommends \
        python2 \
-       python-is-python2) \
+       python-is-python2 \
      && rm -rf /var/lib/apt/lists/* \
      && apt-get clean \
      && mkdir -p /home/docker/.gem/ruby/$RUBY_MAJOR.0
